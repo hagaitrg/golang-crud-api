@@ -3,13 +3,19 @@ package repository
 import (
 	"basic-golang-rest-api/domain"
 	"context"
+	"database/sql"
+
+	"github.com/doug-martin/goqu/v9"
 )
 
 type customerRepository struct {
+	db *goqu.Database
 }
 
-func NewCustomer() domain.CustomerRepository {
-	return &customerRepository{}
+func NewCustomer(con *sql.DB) domain.CustomerRepository {
+	return &customerRepository{
+		db:goqu.New("default",con)
+	}
 }
 
 func (cr customerRepository) FindAll(ctx context.Context) ([]domain.Customer, error) {

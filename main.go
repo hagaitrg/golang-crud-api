@@ -1,14 +1,23 @@
 package main
 
-import "github.com/gofiber/fiber/v2"
+import (
+	"basic-golang-rest-api/internal/config"
+	"basic-golang-rest-api/internal/connection"
+	"basic-golang-rest-api/internal/repository"
+
+	"github.com/gofiber/fiber/v2"
+)
 
 func main() {
 
+	cnf := config.Get()	
+	dbConnection := connection.GetDatabase(cnf.Database)
+
 	app := fiber.New();
 
-	app.Get("/developers", developers);
+	customerRepository := repository.NewCustomer(dbConnection)
 
-	app.Listen(":9000")
+	_ = app.Listen(cnf.Server.Host +":" +cnf.Server.Port)
 }
 
 func developers(ctx *fiber.Ctx)  error{
